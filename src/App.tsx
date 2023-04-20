@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Suspense, useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import { DataGrid } from "@mui/x-data-grid";
+import Search from "@mui/icons-material/Search";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  TextField,
+} from "@mui/material";
+import { QiitaListGrid } from "./components/QiitaListGrid";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ErrorBoundary } from "react-error-boundary";
+import { ErrorSnackbar } from "./components/ErrorSnackbar";
+
+const queryClient = new QueryClient();
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [searchContent, setSearchContent] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    <QueryClientProvider client={queryClient}>
+      <Box>
+        <Box>
+          <TextField
+            label="Search"
+            value={searchContent}
+            onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+              setSearchContent(ev.target.value);
+            }}
+          ></TextField>
+          <Button
+            variant="contained"
+            startIcon={<Search />}
+            onClick={() => {
+              setSearchQuery(searchContent);
+            }}
+          >
+            検索
+          </Button>
+        </Box>
+        <ErrorBoundary FallbackComponent={ErrorSnackbar}>
+          <Suspense fallback={<CircularProgress />}>
+            <QiitaListGrid searchQuery={searchQuery} />
+          </Suspense>
+        </ErrorBoundary>
+      </Box>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
