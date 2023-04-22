@@ -1,6 +1,6 @@
 export type Tag = {
   name: string;
-  versions: any[];
+  versions: string[];
 };
 
 export type User = {
@@ -28,7 +28,7 @@ export type QiitaPost = {
   coediting: boolean;
   comments_count: number;
   created_at: string;
-  group: any;
+  group: QiitaGroup;
   id: string;
   likes_count: number;
   private: boolean;
@@ -40,6 +40,24 @@ export type QiitaPost = {
   url: string;
   user: User;
   page_views_count: number | null;
-  team_membership: any;
+  team_membership: QiitaTeamMemberShip;
   organization_url_name: string | null;
+};
+
+export type QiitaGroup = {
+  created_at: string;
+  id: number;
+  description: string;
+  name: string;
+  private: boolean;
+  updated_at: string;
+  url_name: string;
+};
+
+export type QiitaTeamMemberShip = {
+  name: string;
+  id: string;
+  description: string;
+  email: string;
+  last_accessed_at: string;
 };
