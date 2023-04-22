@@ -50,7 +50,7 @@ export const QiitaListGrid: React.FC<QiitaListGridProps> = ({
           : 0,
         pageSize: searchParams.get("per_page")
           ? Number(searchParams.get("per_page"))
-          : 5,
+          : 20,
       }}
       onPaginationModelChange={(newModel) => {
         searchParams.set("page", String(newModel.page + 1));
