@@ -17,7 +17,10 @@ const router = createBrowserRouter(
       <Route index element={<QiitaList />} />
       <Route path=":id" element={<QiitaDetail />} />
     </Route>
-  )
+  ),
+  {
+    basename: import.meta.env.BASE_URL,
+  }
 );
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
