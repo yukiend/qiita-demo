@@ -36,6 +36,7 @@ export const QiitaList: React.FC = () => {
           startIcon={<Search />}
           onClick={() => {
             searchParams.set("query", searchContent);
+            searchParams.set("page", "1");
             setSearchParams(searchParams);
           }}
         >

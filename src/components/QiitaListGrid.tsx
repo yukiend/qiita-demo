@@ -1,6 +1,5 @@
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useQiitaPostList } from "../api/qiita";
-import { useEffect, useState } from "react";
 import { QiitaPost } from "../models/qiita";
 import { Link } from "react-router-dom";
 
@@ -13,19 +12,6 @@ export const QiitaListGrid: React.FC<QiitaListGridProps> = ({
   searchParams,
   setSearchParams,
 }: QiitaListGridProps) => {
-  const [paginationModel, setPaginationModel] = useState({
-    page: searchParams.get("page") ? Number(searchParams.get("page")) - 1 : 0,
-    pageSize: searchParams.get("per_page")
-      ? Number(searchParams.get("per_page"))
-      : 5,
-  });
-  useEffect(() => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("page", String(paginationModel.page + 1));
-    newSearchParams.set("per_page", String(paginationModel.pageSize));
-    setSearchParams(newSearchParams);
-  }, [paginationModel]);
-
   const posts = useQiitaPostList(
     searchParams?.get("page") ?? undefined,
     searchParams?.get("per_page") ?? undefined,
@@ -58,8 +44,19 @@ export const QiitaListGrid: React.FC<QiitaListGridProps> = ({
       autoHeight
       paginationMode="server"
       pageSizeOptions={[5, 10, 20, 50, 100]}
-      paginationModel={paginationModel}
-      onPaginationModelChange={setPaginationModel}
+      paginationModel={{
+        page: searchParams.get("page")
+          ? Number(searchParams.get("page")) - 1
+          : 0,
+        pageSize: searchParams.get("per_page")
+          ? Number(searchParams.get("per_page"))
+          : 5,
+      }}
+      onPaginationModelChange={(newModel) => {
+        searchParams.set("page", String(newModel.page + 1));
+        searchParams.set("per_page", String(newModel.pageSize));
+        setSearchParams(searchParams);
+      }}
     ></DataGrid>
   );
 };
